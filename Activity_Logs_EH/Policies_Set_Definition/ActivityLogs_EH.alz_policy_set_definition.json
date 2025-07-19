@@ -1,0 +1,66 @@
+{
+  "type": "Microsoft.Authorization/policySetDefinitions",
+  "name": "Activity_Logs_To_EH",
+  "properties": {
+    "displayName": "Activity Log Diagnostic Settings to Event Hub - Full Compliance",
+    "description": "Ensures subscription-level Activity Logs are streamed to Event Hub with granular control over all categories.",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Monitoring"
+    },
+    "parameters": {
+      "diagnosticsname": { "type": "String" },
+      "eventHubAuthorizationRuleId": { "type": "String" },
+      "eventHubName": { "type": "String" },
+      "effect": {
+        "type": "String",
+        "allowedValues": [ "DeployIfNotExists", "Disabled" ],
+        "defaultValue": "DeployIfNotExists"
+      },
+      "enableAdministrative": { "type": "Boolean", "defaultValue": true },
+      "enableSecurity": { "type": "Boolean", "defaultValue": true },
+      "enableServiceHealth": { "type": "Boolean", "defaultValue": true },
+      "enableAlert": { "type": "Boolean", "defaultValue": true },
+      "enableRecommendation": { "type": "Boolean", "defaultValue": true },
+      "enablePolicy": { "type": "Boolean", "defaultValue": true },
+      "enableAutoscale": { "type": "Boolean", "defaultValue": true },
+      "enableResourceHealth": { "type": "Boolean", "defaultValue": true }
+    },
+    "policyDefinitions": [
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/Activity_Logs_To_EH_PartA",
+        "parameters": {
+          "diagnosticsname": { "value": "[parameters('diagnosticsname')]" },
+          "eventHubAuthorizationRuleId": { "value": "[parameters('eventHubAuthorizationRuleId')]" },
+          "eventHubName": { "value": "[parameters('eventHubName')]" },
+          "effect": { "value": "[parameters('effect')]" },
+          "enableAdministrative": { "value": "[parameters('enableAdministrative')]" },
+          "enableSecurity": { "value": "[parameters('enableSecurity')]" },
+          "enableServiceHealth": { "value": "[parameters('enableServiceHealth')]" },
+          "enableAlert": { "value": "[parameters('enableAlert')]" },
+          "enableRecommendation": { "value": "[parameters('enableRecommendation')]" },
+          "enablePolicy": { "value": "[parameters('enablePolicy')]" },
+          "enableAutoscale": { "value": "[parameters('enableAutoscale')]" },
+          "enableResourceHealth": { "value": "[parameters('enableResourceHealth')]" }
+        }
+      },
+      {
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/Activity_Logs_To_EH_PartB",
+        "parameters": {
+          "diagnosticsname": { "value": "[parameters('diagnosticsname')]" },
+          "eventHubAuthorizationRuleId": { "value": "[parameters('eventHubAuthorizationRuleId')]" },
+          "eventHubName": { "value": "[parameters('eventHubName')]" },
+          "effect": { "value": "[parameters('effect')]" },
+          "enableAdministrative": { "value": "[parameters('enableAdministrative')]" },
+          "enableSecurity": { "value": "[parameters('enableSecurity')]" },
+          "enableServiceHealth": { "value": "[parameters('enableServiceHealth')]" },
+          "enableAlert": { "value": "[parameters('enableAlert')]" },
+          "enableRecommendation": { "value": "[parameters('enableRecommendation')]" },
+          "enablePolicy": { "value": "[parameters('enablePolicy')]" },
+          "enableAutoscale": { "value": "[parameters('enableAutoscale')]" },
+          "enableResourceHealth": { "value": "[parameters('enableResourceHealth')]" }
+        }
+      }
+    ]
+  }
+}

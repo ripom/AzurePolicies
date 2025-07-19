@@ -1,0 +1,168 @@
+{
+  "type": "Microsoft.Authorization/policyDefinitions",
+  "name": "Activity_Logs_To_EH_PartA",
+  "properties": {
+    "displayName": "Configure Activity Logs to Event Hub (Administrative, Security, ServiceHealth, Alert)",
+    "description": "Deploys diagnostic settings for key Activity Log categories to Event Hub",
+    "mode": "All",
+    "metadata": {
+      "version": "1.0.0",
+      "category": "Monitoring"
+    },
+    "parameters": {
+      "diagnosticsname": {
+        "type": "String",
+        "defaultValue": "subscriptionToEventHub"
+      },
+      "eventHubAuthorizationRuleId": {
+        "type": "String"
+      },
+      "eventHubName": {
+        "type": "String"
+      },
+      "effect": {
+        "type": "String",
+        "allowedValues": [ "DeployIfNotExists", "Disabled" ],
+        "defaultValue": "DeployIfNotExists"
+      },
+      "enableAdministrative": { "type": "Boolean", "defaultValue": true },
+      "enableSecurity": { "type": "Boolean", "defaultValue": true },
+      "enableServiceHealth": { "type": "Boolean", "defaultValue": true },
+      "enableAlert": { "type": "Boolean", "defaultValue": true },
+      "enableRecommendation": { "type": "Boolean", "defaultValue": true },
+      "enablePolicy": { "type": "Boolean", "defaultValue": true },
+      "enableAutoscale": { "type": "Boolean", "defaultValue": true },
+      "enableResourceHealth": { "type": "Boolean", "defaultValue": true }      
+    },
+    "policyRule": {
+      "if": {
+        "field": "type",
+        "equals": "Microsoft.Resources/subscriptions"
+      },
+      "then": {
+        "effect": "[parameters('effect')]",
+        "details": {
+          "type": "Microsoft.Insights/diagnosticSettings",
+          "deploymentScope": "Subscription",
+          "existenceScope": "Subscription",
+          "existenceCondition": {
+            "allOf": [
+              { "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId", "equals": "[parameters('eventHubAuthorizationRuleId')]" },
+              { "field": "Microsoft.Insights/diagnosticSettings/eventHubName", "equals": "[parameters('eventHubName')]" },
+              {
+                "count": {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs[*]",
+                  "where": {
+                    "allOf": [
+                      { "field": "Microsoft.Insights/diagnosticSettings/logs[*].category", "equals": "Administrative" },
+                      { "field": "Microsoft.Insights/diagnosticSettings/logs[*].enabled", "equals": "[parameters('enableAdministrative')]" }
+                    ]
+                  }
+                },
+                "greater": 0
+              },
+              {
+                "count": {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs[*]",
+                  "where": {
+                    "allOf": [
+                      { "field": "Microsoft.Insights/diagnosticSettings/logs[*].category", "equals": "Security" },
+                      { "field": "Microsoft.Insights/diagnosticSettings/logs[*].enabled", "equals": "[parameters('enableSecurity')]" }
+                    ]
+                  }
+                },
+                "greater": 0
+              },
+              {
+                "count": {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs[*]",
+                  "where": {
+                    "allOf": [
+                      { "field": "Microsoft.Insights/diagnosticSettings/logs[*].category", "equals": "ServiceHealth" },
+                      { "field": "Microsoft.Insights/diagnosticSettings/logs[*].enabled", "equals": "[parameters('enableServiceHealth')]" }
+                    ]
+                  }
+                },
+                "greater": 0
+              },
+              {
+                "count": {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs[*]",
+                  "where": {
+                    "allOf": [
+                      { "field": "Microsoft.Insights/diagnosticSettings/logs[*].category", "equals": "Alert" },
+                      { "field": "Microsoft.Insights/diagnosticSettings/logs[*].enabled", "equals": "[parameters('enableAlert')]" }
+                    ]
+                  }
+                },
+                "greater": 0
+              }
+            ]
+          },
+          "deployment": {
+            "location": "uksouth",
+            "properties": {
+              "mode": "incremental",
+              "parameters": {
+                "diagnosticsname": { "value": "[parameters('diagnosticsname')]" },
+                "eventHubAuthorizationRuleId": { "value": "[parameters('eventHubAuthorizationRuleId')]" },
+                "eventHubName": { "value": "[parameters('eventHubName')]" },
+                "enableAdministrative": { "value": "[parameters('enableAdministrative')]" },
+                "enableSecurity": { "value": "[parameters('enableSecurity')]" },
+                "enableServiceHealth": { "value": "[parameters('enableServiceHealth')]" },
+                "enableAlert": { "value": "[parameters('enableAlert')]" },
+                "enableRecommendation": { "value": "[parameters('enableRecommendation')]" },
+                "enablePolicy": { "value": "[parameters('enablePolicy')]" },
+                "enableAutoscale": { "value": "[parameters('enableAutoscale')]" },
+                "enableResourceHealth": { "value": "[parameters('enableResourceHealth')]" }
+              },
+              "template": {
+                "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+                "contentVersion": "1.0.0.0",
+                "parameters": {
+                  "diagnosticsname": { "type": "string" },
+                  "eventHubAuthorizationRuleId": { "type": "string" },
+                  "eventHubName": { "type": "string" },
+                  "enableAdministrative": { "type": "bool" },
+                  "enableSecurity": { "type": "bool" },
+                  "enableServiceHealth": { "type": "bool" },
+                  "enableAlert": { "type": "bool" },
+                  "enableRecommendation": { "type": "bool" },
+                  "enablePolicy": { "type": "bool" },
+                  "enableAutoscale": { "type": "bool" },
+                  "enableResourceHealth": { "type": "bool" }                  
+                },
+                "resources": [
+                  {
+                    "name": "[parameters('diagnosticsname')]",
+                    "type": "Microsoft.Insights/diagnosticSettings",
+                    "apiVersion": "2021-05-01-preview",
+                    "location": "Global",
+                    "properties": {
+                      "eventHubAuthorizationRuleId": "[parameters('eventHubAuthorizationRuleId')]",
+                      "eventHubName": "[parameters('eventHubName')]",
+                      "logs": [
+                        { "category": "Administrative", "enabled": "[parameters('enableAdministrative')]" },
+                        { "category": "Security", "enabled": "[parameters('enableSecurity')]" },
+                        { "category": "ServiceHealth", "enabled": "[parameters('enableServiceHealth')]" },
+                        { "category": "Alert", "enabled": "[parameters('enableAlert')]" },
+                        { "category": "Recommendation", "enabled": "[parameters('enableRecommendation')]" },
+                        { "category": "Policy", "enabled": "[parameters('enablePolicy')]" },
+                        { "category": "Autoscale", "enabled": "[parameters('enableAutoscale')]" },
+                        { "category": "ResourceHealth", "enabled": "[parameters('enableResourceHealth')]" }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "roleDefinitionIds": [
+            "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+            "/providers/microsoft.authorization/roleDefinitions/f526a384-b230-433a-b45c-95f59c4a2dec"
+          ]
+        }
+      }
+    }
+  }
+}

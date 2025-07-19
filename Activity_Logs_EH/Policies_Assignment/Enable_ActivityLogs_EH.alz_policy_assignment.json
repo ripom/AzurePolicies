@@ -1,0 +1,58 @@
+{
+    "type": "Microsoft.Authorization/policyAssignments",
+    "apiVersion": "2022-06-01",
+    "name": "Enable_Activity_Logs_To_EH",
+    "location": "${default_location}",
+    "identity": {
+        "type": "SystemAssigned"
+    },
+    "dependsOn": [],
+    "properties": {
+        "description": "Ensures Activity Logs are enabled and sent to Event Hub for subscription in the Azure Landing Zone.",
+        "displayName": "Enable Activity Logs to Event Hub",
+        "policyDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/Activity_Logs_To_EH",
+        "enforcementMode": "Default",
+        "nonComplianceMessages": [
+        {
+            "message": "Activity Logs must be enabled for subscription with enabled categories to stream to Event Hub."
+        }
+        ],
+        "parameters": {
+            "diagnosticsname": {
+                "value": ""
+            },
+            "eventHubAuthorizationRuleId": {
+                "value": ""
+            },
+            "eventHubName": {
+                "value": ""
+            },
+            "enableAdministrative": {
+                "value": ""
+            },
+            "enableSecurity": {
+                "value": ""
+            },
+            "enableServiceHealth": {
+                "value": ""
+            },
+            "enableAlert": {
+                "value": ""
+            },
+            "enableRecommendation": {
+                "value": ""
+            },
+            "enablePolicy": {
+                "value": ""
+            },
+            "enableAutoscale": {
+                "value": ""
+            },
+            "enableResourceHealth": {
+                "value": ""
+            }
+        },
+            "scope": "${current_scope_resource_id}",
+            "notScopes": []
+    }
+}
